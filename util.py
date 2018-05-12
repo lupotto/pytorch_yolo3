@@ -213,11 +213,6 @@ def write_results(prediction, confidence, num_classes, nms = True, nms_conf = 0.
 
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Sat Mar 24 00:12:16 2018
-
-@author: ayooshmac
-"""
 
 def predict_transform_half(prediction, inp_dim, anchors, num_classes, CUDA = True):
     batch_size = prediction.size(0)
@@ -381,3 +376,31 @@ def write_results_half(prediction, confidence, num_classes, nms = True, nms_conf
                 output = torch.cat((output,out))
     
     return output
+
+def read_data_cfg(datacfg):
+    options = dict()
+    options['gpus'] = '0,1,2,3'
+    options['num_workers'] = '10'
+    with open(datacfg, 'r') as fp:
+        lines = fp.readlines()
+
+    for line in lines:
+        line = line.strip()
+        if line == '':
+            continue
+        key,value = line.split('=')
+        key = key.strip()
+        value = value.strip()
+        options[key] = value
+    return options
+
+def file_lines(thefilepath):
+    count = 0
+    thefile = open(thefilepath, 'rb')
+    while True:
+        buffer = thefile.read(8192*1024)
+        if not buffer:
+            break
+        count += buffer.count(b'\n')
+    thefile.close()
+    return count

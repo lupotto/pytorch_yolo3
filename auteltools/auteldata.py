@@ -84,7 +84,8 @@ class Autel(Dataset):
         :param data_location (str): location of folder data
         :return:
         """
-        self.ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+        self.ROOT_DIR = os.path.dirname(os.path.dirname(__file__))
         self.batch_size = batch_size
         self.data_location = data_location
         self.img_dict = dict()
@@ -139,14 +140,14 @@ class Autel(Dataset):
 
         print("Loading pkl file...")
 
-        with open(os.path.join(self.ROOT_DIR,"annotation_file"), "rb") as fp:
+        with open(os.path.join(self.ROOT_DIR,"pkl_files","annotation_file.pkl"), "rb") as fp:
             annotations = pickle.load(fp)
         return annotations
         print("pkl loaded")
     def create_ann_file(self,list_annotation):
 
         print("Creating pkl file...")
-        with open("annotation_file", "wb") as fp:  # Pickling
+        with open("annotation_file.pkl", "wb") as fp:  # Pickling
             pickle.dump(list_annotation, fp)
 
         print("pkl created")
@@ -225,14 +226,28 @@ class Autel(Dataset):
         return image_list
 
 
+    def split_train_test(self, test_size):
+        train_file = open(os.path.join(os.path.expanduser('~'), 'resources/AutelData', 'train.txt'), 'w')
+        test_file = open(os.path.join(os.path.expanduser('~'), 'resources/AutelData', 'test.txt'), 'w')
 
+        total_file = os.path.join(os.path.expanduser('~'), 'resources/AutelData', 'total.txt')
+
+        num_train = int((1-test_size) * self.__len__())
+
+        for i , ann  in enumerate(self.annotations):
+            if i < num_train:
+                train_file.write('{}\n'.format(ann.path_file))
+            else:
+                test_file.write('{}\n'.format(ann.path_file))
+
+        train_file.close()
+        test_file.close()
 
     def convert_labels_to_yolo(self):
         train_file = open(os.path.join(os.path.expanduser('~'), 'outAutelData', 'train_yolo','train.txt'),'w')
         #train_file_darknet = open(os.path.join(os.path.expanduser('~'),'')
         for ann in self.annotations:
             self.convert_annotation(ann)
-            train_file.write('{}\n'.format(ann.path_file))
 
     def convert_annotation(self,ann):
 
@@ -268,7 +283,7 @@ class Autel(Dataset):
         return (x, y, w, h)
 
     def load_classes(self):
-        name = os.path.join(self.ROOT_DIR, "autel.names")
+        name = os.path.join(self.ROOT_DIR,"data", "autel.names")
         fp = open(name, "r")
         names = fp.read().split("\n")[:-1]
         return names

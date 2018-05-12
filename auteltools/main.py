@@ -304,9 +304,16 @@ if __name__ == '__main__':
 
     #createHistogram()
 
+    print(os.path.dirname(os.path.dirname(__file__)))
+
     dataset = ad.Autel('resources', read_all_data=False)
 
-    list_images = dataset.load_images(16)
+
+    print(dataset.__len__())
+
+    dataset.split_train_test(0.25)
+
+    #list_images = dataset.load_images(16)
 
     #classes = dataset.load_classes()
 
