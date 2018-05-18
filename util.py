@@ -146,7 +146,7 @@ def write_results(prediction, confidence, num_classes, nms = True, nms_conf = 0.
             image_pred_ = image_pred[non_zero_ind.squeeze(),:].view(-1,7)
         except:
             continue
-        
+
         #Get the various classes detected in the image
         img_classes = unique(image_pred_[:,-1])
 

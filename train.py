@@ -81,4 +81,10 @@ if use_cuda:
     torch.cuda.manual_seed(seed)
 
 model       = Darknet(cfgfile)
-region_loss = model.loss()
+
+model.load_weights(weightfile)
+
+print(model)
+
+
+#region_loss = model.loss()

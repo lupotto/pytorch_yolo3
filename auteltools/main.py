@@ -306,13 +306,20 @@ if __name__ == '__main__':
 
     print(os.path.dirname(os.path.dirname(__file__)))
 
-    dataset = ad.Autel('resources', read_all_data=False)
+    dataset = ad.Autel(data_location='resources',read_all_data=True)
 
-
-    print(dataset.__len__())
-
-    dataset.split_train_test(0.25)
-
+    #dataset.annotations[0].show_annotation()
+    #labels =dataset.annotations[6].get_labels_name()
+    #print(labels)
+    #dataset.annotations[6].show_annotation()
+    #print(dataset.__len__())
+    #dataset.convert_labels_to_yolo()cd
+    #dataset.labels_to_folder()
+    #dataset.count_classes()
+    #dataset.convert_labels_to_yolo()
+    #dataset.show_class('Rider')
+    #dataset.split_train_test(0.10)
+    #print(dataset.convert_labels_to_yolo())
     #list_images = dataset.load_images(16)
 
     #classes = dataset.load_classes()

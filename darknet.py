@@ -263,8 +263,11 @@ class Darknet(nn.Module):
         super(Darknet, self).__init__()
         self.blocks = parse_cfg(cfgfile)
         self.net_info, self.module_list = create_modules(self.blocks)
+        self.loss = self.module_list[len(self.module_list) - 1]
         self.header = torch.IntTensor([0,0,0,0])
         self.seen = 0
+
+
 
     def get_blocks(self):
         return self.blocks
@@ -429,7 +432,7 @@ class Darknet(nn.Module):
                 #Do the same as above for weights
                 conv_weights = torch.from_numpy(weights[ptr:ptr+num_weights])
                 ptr = ptr + num_weights
-
+                print(conv.weight.data.shape)
                 conv_weights = conv_weights.view_as(conv.weight.data)
                 conv.weight.data.copy_(conv_weights)
                 

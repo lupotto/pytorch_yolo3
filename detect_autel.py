@@ -61,7 +61,7 @@ def arg_parse():
                         default = "/home/alupotto/Desktop/testing", type = str)
     parser.add_argument("--det", dest = 'det', help =
                         "Image / Directory to store detections to",
-                        default = "/home/alupotto/Desktop/out_testing", type = str)
+                        default = "/home/alupotto/Desktop/out_yolov3", type = str)
     parser.add_argument("--bs", dest="bs", help="Batch size", default=1)
     parser.add_argument("--confidence", dest="confidence", help="Object Confidence to filter predictions", default=0.5)
     parser.add_argument("--nms_thresh", dest="nms_thresh", help="NMS Threshhold", default=0.4)
@@ -96,6 +96,7 @@ if __name__ ==  '__main__':
         scales_indices.extend(li)
 
     images = args.images
+    images = '/home/alupotto/resources/AutelData/Set2/M0093'
     batch_size = int(args.bs)
     confidence = float(args.confidence)
     nms_thesh = float(args.nms_thresh)
@@ -111,8 +112,10 @@ if __name__ ==  '__main__':
 
     #Set up the neural network
     print("Loading network.....")
-    model = Darknet(args.cfgfile)
-    model.load_weights(args.weightsfile)
+    #model = Darknet(args.cfgfile)
+    #model.load_weights(args.weightsfile)
+    model = Darknet('/home/alupotto/PycharmProjects/pytorch_yolo3/cfg/yolo-obj.cfg')
+    model.load_weights('/home/alupotto/PycharmProjects/darknet/backup/yolo-obj_7500.weights')
     print("Network successfully loaded")
 
     model.net_info["height"] = args.reso
@@ -158,7 +161,7 @@ if __name__ ==  '__main__':
 
     i = 0
     write = False
-    model(get_test_input(inp_dim, CUDA), CUDA)
+#    model(get_test_input(inp_dim, CUDA), CUDA)
     start_det_loop = time.time()
     objs = {}
 
@@ -172,6 +175,7 @@ if __name__ ==  '__main__':
             prediction = model(Variable(batch), CUDA)
 
         prediction = prediction[:, scales_indices]
+
 
         # get the boxes with object confidence > threshold
         # Convert the cordinates to absolute coordinates
